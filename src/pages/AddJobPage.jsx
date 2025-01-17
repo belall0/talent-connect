@@ -12,6 +12,7 @@ const AddJobPage = () => {
   const [companyEmail, setCompanyEmail] = useState("");
   const [companyPhone, setCompanyPhone] = useState("");
 
+  const navigate = useNavigate();
   const handleFormSubmission = async (e) => {
     e.preventDefault();
 
@@ -31,7 +32,6 @@ const AddJobPage = () => {
 
     submitJob(jobData);
 
-    const navigate = useNavigate();
     return navigate("/jobs");
   };
 
