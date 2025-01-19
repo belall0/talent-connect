@@ -1,25 +1,27 @@
+import { useLoaderData, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-const AddJobPage = () => {
-  const [type, setType] = useState('Full-Time');
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [salary, setSalary] = useState('Under $50K');
-  const [location, setLocation] = useState('');
-  const [companyName, setCompanyName] = useState('');
-  const [companyDescription, setCompanyDescription] = useState('');
-  const [companyEmail, setCompanyEmail] = useState('');
-  const [companyPhone, setCompanyPhone] = useState('');
+const EditJobPage = () => {
+  const job = useLoaderData();
+
+  const [type, setType] = useState(job.type);
+  const [name, setName] = useState(job.title);
+  const [description, setDescription] = useState(job.description);
+  const [salary, setSalary] = useState(job.salary);
+  const [location, setLocation] = useState(job.location);
+  const [companyName, setCompanyName] = useState(job.company.name);
+  const [companyDescription, setCompanyDescription] = useState(job.company.description);
+  const [companyEmail, setCompanyEmail] = useState(job.company.contactEmail);
+  const [companyPhone, setCompanyPhone] = useState(job.company.contactPhone);
 
   const navigate = useNavigate();
-
   const handleFormSubmission = async (e) => {
     e.preventDefault();
 
     const jobData = {
-      title,
+      id: job.id,
+      title: name,
       type,
       description,
       location,
@@ -32,13 +34,11 @@ const AddJobPage = () => {
       },
     };
 
-    try {
-      await submitJob(jobData);
-      toast.success('Job added successfully');
-      navigate('/');
-    } catch (error) {
-      console.error('Submission error:', error);
-    }
+    toast.success('Job updated successfully!');
+
+    submitJob(jobData);
+
+    return navigate('/jobs');
   };
 
   return (
@@ -79,8 +79,8 @@ const AddJobPage = () => {
                 className="border rounded w-full py-2 px-3 mb-2"
                 placeholder="eg. Beautiful Apartment In Miami"
                 required
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
               />
             </div>
 
@@ -213,14 +213,13 @@ const AddJobPage = () => {
   );
 };
 
-const submitJob = async (newJob) => {
-  await fetch('/api/jobs', {
-    method: 'POST',
+const submitJob = async (updatedJob) => {
+  await fetch(`/api/jobs/${updatedJob.id}`, {
+    method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(newJob),
+    body: JSON.stringify(updatedJob),
   });
 };
-
-export default AddJobPage;
+export default EditJobPage;

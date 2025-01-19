@@ -1,5 +1,6 @@
-import { Link, useLoaderData, useNavigate } from "react-router-dom";
-import { FaArrowLeft, FaLocationDot } from "react-icons/fa6";
+import { Link, useLoaderData, useNavigate } from 'react-router-dom';
+import { FaArrowLeft, FaLocationDot } from 'react-icons/fa6';
+import { toast } from 'react-toastify';
 
 const JobPage = () => {
   const job = useLoaderData();
@@ -7,19 +8,17 @@ const JobPage = () => {
   const navigate = useNavigate();
   const deleteJob = async () => {
     await fetch(`/api/jobs/${job.id}`, {
-      method: "DELETE",
+      method: 'DELETE',
     });
 
-    return navigate("/jobs");
+    toast.success('Job deleted successfully!');
+    return navigate('/jobs');
   };
 
   return (
     <>
       <section className="container m-auto py-6 px-6">
-        <Link
-          to="/jobs"
-          className="text-indigo-500 hover:text-indigo-600 flex items-center"
-        >
+        <Link to="/jobs" className="text-indigo-500 hover:text-indigo-600 flex items-center">
           <FaArrowLeft className="mr-2" /> Back to Job Listings
         </Link>
       </section>
@@ -38,15 +37,11 @@ const JobPage = () => {
               </div>
 
               <div className="bg-white p-6 rounded-lg shadow-md mt-6">
-                <h3 className="text-indigo-800 text-lg font-bold mb-6">
-                  Job Description
-                </h3>
+                <h3 className="text-indigo-800 text-lg font-bold mb-6">Job Description</h3>
 
                 <p className="mb-4">{job.description}</p>
 
-                <h3 className="text-indigo-800 text-lg font-bold mb-2">
-                  Salary
-                </h3>
+                <h3 className="text-indigo-800 text-lg font-bold mb-2">Salary</h3>
 
                 <p className="mb-4">{job.salary} / Year</p>
               </div>
@@ -65,32 +60,26 @@ const JobPage = () => {
 
                 <h3 className="text-xl">Contact Email:</h3>
 
-                <p className="my-2 bg-indigo-100 p-2 font-bold">
-                  {job.company.contactEmail}
-                </p>
+                <p className="my-2 bg-indigo-100 p-2 font-bold">{job.company.contactEmail}</p>
 
                 <h3 className="text-xl">Contact Phone:</h3>
 
-                <p className="my-2 bg-indigo-100 p-2 font-bold">
-                  {job.company.contactPhone}
-                </p>
+                <p className="my-2 bg-indigo-100 p-2 font-bold">{job.company.contactPhone}</p>
               </div>
 
               {/* <!-- Manage --> */}
               <div className="bg-white p-6 rounded-lg shadow-md mt-6">
                 <h3 className="text-xl font-bold mb-6">Manage Job</h3>
                 <Link
-                  to="/add-job"
-                  className="bg-indigo-500 hover:bg-indigo-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
-                >
+                  to={`/jobs/${job.id}/edit`}
+                  className="bg-indigo-500 hover:bg-indigo-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block">
                   Edit Job
                 </Link>
                 <button
                   onClick={() => {
                     deleteJob(job.id);
                   }}
-                  className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
-                >
+                  className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block">
                   Delete Job
                 </button>
               </div>
